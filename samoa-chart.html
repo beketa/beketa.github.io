@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Samoa Map</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <style>
+      html {
+        height: 100%;
+      }
+      body {
+        margin: 0;
+        height: 100%;
+      }
+      #map {
+        height: 100%;
+        width: 100%;
+      }
+      .info {
+        font-size: 16px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript" src="http://beketa-1071.appspot.com/js/mapchart.js"></script>
+    <script>
+
+      function initMap() {
+        var map = new google.maps.Map(document.getElementById('map'), {
+          center: {lat: -13.7581353, lng: -172.1047677},
+          zoom: 9
+        });
+
+        var charts = [
+          { pos: {lat: -13.5, lng: -172.4},
+            url: mapchart.removeBackground('https://docs.google.com/spreadsheets/d/14x3KI7VphUI6-xzkeYFE_f58ZNS4-luV0MhUpbz5hR0/pubchart?oid=1500802721&format=image') },
+          { pos: {lat: -13.8, lng: -171.8},
+            url: mapchart.removeBackground('https://docs.google.com/spreadsheets/d/14x3KI7VphUI6-xzkeYFE_f58ZNS4-luV0MhUpbz5hR0/pubchart?oid=212445986&format=image') }
+        ];
+        mapchart.addCharts(map, charts);
+      }
+
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?callback=initMap&language=ja"
+        async defer></script>
+  </body>
+</html>
