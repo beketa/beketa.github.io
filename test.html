@@ -15,15 +15,11 @@
               console.log('Calling requireStorageAccess');
               var promise = document.requestStorageAccess();
               promise.then(
-                function (gotAccess) {
-                  if (gotAccess) {
-                    console.log('Got access!');
-                  } else {
-                    console.log('Did not get access!');
-                  }
+                () => {
+                  console.log('Got access!');
                 },
-                function (reason) {
-                  console.log('Failed for some reasons:' + reason);
+                () => {
+                  console.log('Failed to get access!');
                 }
               );
             }
