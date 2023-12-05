@@ -1,11 +1,39 @@
-<script>
-  document.requestStorageAccess().then(
-    () => {
-      console.log("access granted");
-    },
-    () => {
-      console.log("access denied");
-    },
-  );
-</script>
-Hello!
+<html>
+  <head>
+    <title>Widget.site</title>
+  </head>
+  <body>
+    <script type="text/javascript">
+      function requireCookies() {
+        var promise = document.hasStorageAccess();
+        promise.then(
+          function (hasAccess) {
+            if (hasAccess) {
+              console.log('document has access!');
+            } else {
+              console.log('document does not have access!');
+              console.log('Calling requireStorageAccess');
+              var promise = document.requestStorageAccess();
+              promise.then(
+                function (gotAccess) {
+                  if (gotAccess) {
+                    console.log('Got access!');
+                  } else {
+                    console.log('Did not get access!');
+                  }
+                },
+                function (reason) {
+                  console.log('Failed for some reasons:' + reason);
+                }
+              );
+            }
+          },
+          function (reason) {
+            console.log('Failed for some reasons: ' + reason);
+          }
+        );
+      }
+    </script>
+    <button onclick="requireCookies()">Require access</button>
+  </body>
+</html>
