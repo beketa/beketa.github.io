@@ -30,7 +30,9 @@
         );
       }
       function setCookie() {
-        document.cookie = "hoge";
+        var date = new Date();
+        date.setTime(date.getTime() + 60 * 1000 * 5);
+        document.cookie = "hoge; expires=" + date.toGMTString();
       }
     </script>
     <button onclick="requireCookies()">Require access</button>
