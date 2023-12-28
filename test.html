@@ -5,6 +5,17 @@
   <body>
     <script type="text/javascript">
       function requireCookies() {
+        var promise = document.requestStorageAccess();
+        promise.then(
+          () => {
+            console.log('Got access!');
+          },
+          () => {
+            console.log('Failed to get access!');
+          }
+        );
+      }
+      function requireCookies2() {
         var promise = document.hasStorageAccess();
         promise.then(
           function (hasAccess) {
