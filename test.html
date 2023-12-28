@@ -29,7 +29,11 @@
           }
         );
       }
+      function setCookie() {
+        document.cookie = "hoge";
+      }
     </script>
     <button onclick="requireCookies()">Require access</button>
+    <button onclick="setCookie()">Set cookie</button>
   </body>
 </html>
