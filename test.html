@@ -43,7 +43,7 @@
       function setCookie() {
         var date = new Date();
         date.setTime(date.getTime() + 60 * 1000 * 5);
-        document.cookie = "hoge=1; expires=" + date.toGMTString();
+        document.cookie = "hoge=1; SameSite=None; Secure; expires=" + date.toGMTString();
       }
     </script>
     <button onclick="requireCookies()">Require access</button>
