@@ -4,7 +4,7 @@
   </head>
   <body>
     <script type="text/javascript">
-      function requestStorageAccess() {
+      function requestAccess() {
         var promise = document.requestStorageAccess();
         promise.then(
           () => {
@@ -21,7 +21,7 @@
         document.cookie = "foo=1; SameSite=None; Secure; expires=" + date.toGMTString();
       }
     </script>
-    <button onclick="requestStorageAccess()">Request access</button>
+    <button onclick="requestAccess()">Request access</button>
     <button onclick="setCookie()">Set cookie</button>
   </body>
 </html>
