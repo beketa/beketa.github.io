@@ -1,10 +1,10 @@
 <html>
   <head>
-    <title>Widget.site</title>
+    <title>Embedded content</title>
   </head>
   <body>
     <script type="text/javascript">
-      function requireCookies() {
+      function requestStorageAccess() {
         var promise = document.requestStorageAccess();
         promise.then(
           () => {
@@ -15,38 +15,13 @@
           }
         );
       }
-      function requireCookies2() {
-        var promise = document.hasStorageAccess();
-        promise.then(
-          function (hasAccess) {
-            if (hasAccess) {
-              console.log('document has access!');
-            } else {
-              console.log('document does not have access!');
-              console.log('Calling requireStorageAccess');
-              var promise = document.requestStorageAccess();
-              promise.then(
-                () => {
-                  console.log('Got access!');
-                },
-                () => {
-                  console.log('Failed to get access!');
-                }
-              );
-            }
-          },
-          function (reason) {
-            console.log('Failed for some reasons: ' + reason);
-          }
-        );
-      }
       function setCookie() {
         var date = new Date();
         date.setTime(date.getTime() + 60 * 1000 * 5);
-        document.cookie = "hoge=1; SameSite=None; Secure; expires=" + date.toGMTString();
+        document.cookie = "foo=1; SameSite=None; Secure; expires=" + date.toGMTString();
       }
     </script>
-    <button onclick="requireCookies()">Require access</button>
+    <button onclick="requestStorageAccess()">Request access</button>
     <button onclick="setCookie()">Set cookie</button>
   </body>
 </html>
