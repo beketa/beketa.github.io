@@ -21,6 +21,14 @@
         date.setTime(date.getTime() + 60 * 1000 * 5);
         document.cookie = "foo=1; SameSite=None; Secure; expires=" + date.toGMTString();
       }
+      document.hasStorageAccess().then(
+        (result) => {
+          console.log(result ? 'Has access!' : 'Does not have access!');
+        },
+        () => {
+          console.log('Failed to call hasStorageAccess()');
+        }
+      );
     </script>
     <button onclick="requestAccess()">Request access</button>
     <button onclick="setCookie()">Set cookie</button>
