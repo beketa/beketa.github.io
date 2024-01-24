@@ -9,6 +9,7 @@
         promise.then(
           () => {
             console.log('Got access!');
+            window.location.href="test.html?r=1"
           },
           () => {
             console.log('Failed to get access!');
@@ -23,6 +24,5 @@
     </script>
     <button onclick="requestAccess()">Request access</button>
     <button onclick="setCookie()">Set cookie</button>
-    <a href="landing.html">Go to landing page</a>
   </body>
 </html>
