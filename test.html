@@ -4,7 +4,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
   </head>
   <body>
+    <button onclick="login()">Login</button>
+    <button onclick="requestAccess()">Request access</button>
+    <div id="withcookie" style="display:none">
+      Cookies are set.
+    </div>
+    <div id="withoutcookie" style="display:none">
+      Cookies are not set.
+    </div>
+    <div id="withstorageaccess" style="display:none">
+      Has storage access.
+    </div>
+    <div id="withoutstorageaccess" style="display:none">
+      Doesn't have storage access.
+    </div>
     <script type="text/javascript">
+      function hasCookie() {
+        return !!document.cookie;
+      }
+
+      if (hasCookie()) {
+        document.getElementById('withcookie').style.display = 'block';
+        document.getElementById('withoutcookie').style.display = 'none';
+      } else {
+        document.getElementById('withoutcookie').style.display = 'block';
+        document.getElementById('withcookie').style.display = 'none';
+      }
+
       function requestAccess() {
         var promise = document.requestStorageAccess();
         promise.then(
@@ -17,21 +43,23 @@
           }
         );
       }
-      function setCookie() {
-        var date = new Date();
-        date.setTime(date.getTime() + 60 * 1000 * 5);
-        document.cookie = "foo=1; SameSite=None; Secure; expires=" + date.toGMTString();
+      function login() {
+        window.location = "https://beketa.github.io/login.html";
       }
       document.hasStorageAccess().then(
         (result) => {
-          console.log(result ? 'Has access!' : 'Does not have access!');
+          if (result) {
+            document.getElementById('withstorageaccess').style.display = 'block';
+            document.getElementById('withoutstorageaccess').style.display = 'none';
+          } else {
+            document.getElementById('withoutstorageaccess').style.display = 'block';
+            document.getElementById('withstorageaccess').style.display = 'none';
+          }
         },
         () => {
           console.log('Failed to call hasStorageAccess()');
         }
       );
     </script>
-    <button onclick="requestAccess()">Request access</button>
-    <button onclick="setCookie()">Set cookie</button>
   </body>
 </html>
