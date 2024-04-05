@@ -60,7 +60,10 @@
           console.log('Failed to call hasStorageAccess()');
         }
       );
-      requestAccess();
+      new Promise(function(resolve, reject) {
+        requestAccess();
+        resolve();
+      });
     </script>
   </body>
 </html>
