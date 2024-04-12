@@ -42,7 +42,7 @@
           (reason) => {
             console.log('Failed to get access!');
             console.log(reason);
-            window.parent.location.href = "https://www.example.com/";
+            window.open("https://www.example.com/", target="_blank");
           }
         );
       }
@@ -55,7 +55,7 @@
       }
       
       function login() {
-        window.parent.location.href = "https://beketa.github.io/login.html";
+        window.open("https://beketa.github.io/login.html", target="_blank");
       }
       document.hasStorageAccess().then(
         (result) => {
