@@ -42,20 +42,13 @@
           (reason) => {
             console.log('Failed to get access!');
             console.log(reason);
-            window.open("https://www.example.com/", target="_blank");
+            window.open("https://www.example.com/", target="_top");
           }
         );
       }
 
-      function requestAccessAsync() {
-        new Promise(function(resolve, reject) {
-          requestAccess();
-          resolve();
-        });
-      }
-      
       function login() {
-        window.open("https://beketa.github.io/login.html", target="_blank");
+        window.open("https://beketa.github.io/login.html", target="_top");
       }
       document.hasStorageAccess().then(
         (result) => {
