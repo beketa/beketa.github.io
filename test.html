@@ -42,6 +42,7 @@
           (reason) => {
             console.log('Failed to get access!');
             console.log(reason);
+            window.parent.location.href = "https://www.example.com/";
           }
         );
       }
