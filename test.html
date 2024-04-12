@@ -34,12 +34,14 @@
       function requestAccess() {
         var promise = document.requestStorageAccess();
         promise.then(
-          () => {
+          (value) => {
             console.log('Got access!');
+            console.log(value);
             window.location.href="test.html?r=1"
           },
-          () => {
+          (reason) => {
             console.log('Failed to get access!');
+            console.log(reason);
           }
         );
       }
