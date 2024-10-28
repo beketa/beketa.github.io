@@ -1,8 +1,17 @@
 <html>
-  <body>
-iPad Pro 11: 980 x 587
+  <head>
     <script>
-      alert("width: " + window.innerWidth + ", height: " + window.innerHeight + ".");
+      showCurrentSize = (event) => {
+        document.getElementById("width").innerHTML = "" + window.innerWidth;
+        document.getElementById("height").innerHTML = "" + window.innerHeight;
+      };
+      window.onload = showCurrentSize;
+      window.onresize = showCurrentSize;
     </script>
+  </head>
+  <body>
+    Current: <span id="width">0</span> x <span id="height">0</span>
+    <p>
+    iPad Pro 11: 980 x 587
   </body>
 </html>
