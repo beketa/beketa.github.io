@@ -1,0 +1,51 @@
+<html>
+  <head>
+  </head>
+  <body>
+    <div>
+      <label for="prompt">Prompt:</label>
+      <br/>
+      <textarea id="prompt" name="prompt" rows="10" cols="80">Write a poem!</textarea>
+    </div>
+    <div>
+      <label for="response">Response:</label>
+      <br/>
+      <textarea id="response" name="response" rows="20" cols="80"></textarea>
+    </div>
+    <button id="run">Run!</button>
+    <div>
+      <pre id="status"></pre>
+    </div>
+    <script>
+      function showStatus(text) {
+        document.getElementById("status").innerHTML = text;
+      }
+
+      document.getElementById("run").addEventListener("click", async function() {
+        const session = await ai.languageModel.create();
+
+        const prompt = document.getElementById("prompt").value;
+        document.getElementById("response").value = '';
+        const elapsedTimes = [];
+        for (let i = 0; i < 20; i++) {
+          const start = Date.now();
+          const result = await session.prompt(prompt);
+          const elapsed = Date.now() - start;
+          elapsedTimes.push(elapsed);
+          document.getElementById("response").value = result;
+          showStatus("elapsed: " + elapsed + "ms");
+			  }
+			  elapsedTimes.sort();
+        let sum = 0;
+        for (const e of elapsedTimes) {
+          sum += e;
+        }
+        showStatus(
+          "mean: " + (sum / elapsedTimes.length) + "ms\n"
+          + "5%: " + elapsedTimes[1] + "ms\n"
+          + "95%: " + elapsedTimes[18] + "ms\n"
+        );
+      });
+    </script>
+  </body>
+</html>
