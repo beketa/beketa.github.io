@@ -1,0 +1,19 @@
+<html>
+  <head>
+  </head>
+  <body>
+    <div>
+      <label for="text">Text:</label>
+      <br/>
+      <textarea id="text" name="text" rows="10" cols="80">Text to share!</textarea>
+    </div>
+    <button id="share">Share!</button>
+    <script>
+      document.getElementById("share").addEventListener("click", async function() {
+        await navigator.share({
+          'text': document.getElementById("text").value
+        });
+      });
+    </script>
+  </body>
+</html>
