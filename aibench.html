@@ -34,8 +34,8 @@
           elapsedTimes.push(elapsed);
           document.getElementById("response").value = result;
           showStatus("elapsed: " + elapsed + "ms");
-			  }
-			  elapsedTimes.sort();
+        }
+        elapsedTimes.sort((x, y) => x - y);
         let sum = 0;
         for (const e of elapsedTimes) {
           sum += e;
