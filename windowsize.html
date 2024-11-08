@@ -4,12 +4,12 @@
       showCurrentSize = (event) => {
         document.getElementById("width").innerHTML = "" + window.innerWidth;
         document.getElementById("height").innerHTML = "" + window.innerHeight;
+
+        document.getElementById("fontSize").innerHTML =
+          "" + getComputedStyle(document.documentElement).fontSize;
       };
       window.onload = showCurrentSize;
       window.onresize = showCurrentSize;
-
-      document.getElementById("fontSize").innerHTML =
-        "" + getComputedStyle(document.documentElement).fontSize;
     </script>
   </head>
   <body>
