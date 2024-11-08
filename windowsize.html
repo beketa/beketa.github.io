@@ -7,10 +7,14 @@
       };
       window.onload = showCurrentSize;
       window.onresize = showCurrentSize;
+
+      document.getElementById("fontSize").innerHTML =
+        "" + getComputedStyle(document.documentElement).fontSize;
     </script>
   </head>
   <body>
     Current: <span id="width">0</span> x <span id="height">0</span>
+    Font size: <span id="fontSize">0</span>
     <p>
     iPad Air M2: 980 x 582
   </body>
