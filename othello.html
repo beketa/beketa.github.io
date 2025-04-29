@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Othello</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <h1>Simple Othello</h1>
+
+    <div class="game-area">
+        <div id="board" class="board">
+            </div>
+        <div class="info-panel">
+            <p>現在のターン: <span id="current-player">黒</span></p>
+            <p>スコア: 黒 <span id="score-black">2</span> - 白 <span id="score-white">2</span></p>
+            <div id="message">黒のターンです。</div>
+            <button id="pass-button" style="display: none;">パス</button>
+        </div>
+    </div>
+
+
+    <script src="script.js"></script>
+</body>
+</html>
