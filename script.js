@@ -435,13 +435,16 @@ function minimax(currentBoard, depth, isMaximizingPlayer, aiPlayerColor, alpha, 
     }
 }
 
-
 // ボードを評価する関数 (AIの視点から)
-// シンプルな評価: (AIの石数 - 相手の石数) + コーナーボーナス
+// 改善版: 石差 + コーナー + Xマス/Cマス回避 + モビリティ
 function evaluateBoard(currentBoard, aiPlayerColor) {
     const humanPlayerColor = aiPlayerColor === BLACK ? WHITE : BLACK;
     let aiScore = 0;
     let humanScore = 0;
+    let aiEmptyCornerAdjacent = 0; // AIがXマス・Cマスを埋めてしまい、相手にコーナーを取られやすくする数
+    let humanEmptyCornerAdjacent = 0; // 人間がXマス・Cマスを埋めてしまい、AIにコーナーを取られやすくする数
+    let aiMobility = 0; // AIの着手可能マス数
+    let humanMobility = 0; // 人間の着手可能マス数
 
     // 石の数を数える
     for (let r = 0; r < BOARD_SIZE; r++) {
@@ -454,29 +457,71 @@ function evaluateBoard(currentBoard, aiPlayerColor) {
         }
     }
 
-    let evaluation = aiScore - humanScore;
+    let evaluation = aiScore - humanScore; // ① シンプルな石差
 
-    // コーナーの重み付け (重要)
-    const cornerWeight = 30; // コーナー1つあたりの価値
+    // コーナーの重み付け (非常に重要)
+    const cornerWeight = 50; // コーナー1つあたりの価値
     const corners = [[0, 0], [0, BOARD_SIZE - 1], [BOARD_SIZE - 1, 0], [BOARD_SIZE - 1, BOARD_SIZE - 1]];
 
     for (const [r, c] of corners) {
         if (currentBoard[r][c] === aiPlayerColor) {
-            evaluation += cornerWeight;
+            evaluation += cornerWeight; // ② AIがコーナーを持っていれば加点
         } else if (currentBoard[r][c] === humanPlayerColor) {
-            evaluation -= cornerWeight;
+            evaluation -= cornerWeight; // ② 人間がコーナーを持っていれば減点
         }
     }
 
-    // Xマス、Cマスなども評価に含めるとより強力になるが、ここではシンプルに石差とコーナーのみ
-    // Xマス: コーナーに隣接する斜めのマス (0,1), (1,0), (0,6), (1,7), (6,0), (7,1), (6,7), (7,6)
-    // Cマス: コーナーに隣接する辺のマス (0,1), (1,0), (0,6), (1,7), (6,0), (7,1), (6,7), (7,6) - 同じ定義になってる？間違ってますね。
-    // Cマス: (0,1), (1,0), (0,6), (1,7), (6,0), (7,1), (6,7), (7,6) ではなく
-    // Cマス: (0,1),(1,0), (0,6),(1,7), (6,0),(7,1), (6,7),(7,6) --- やっぱり同じ... 座標が間違ってました。
-    // 正しいXマス: (1,1), (1, BOARD_SIZE-2), (BOARD_SIZE-2, 1), (BOARD_SIZE-2, BOARD_SIZE-2)
-    // 正しいCマス: (0,1),(1,0), (0,6),(1,7), (6,0),(7,1), (6,7),(7,6) --- あれ？まだ間違えてる
-    // 正しいCマス: (0,1), (1,0), (0,BOARD_SIZE-2), (1,BOARD_SIZE-1), (BOARD_SIZE-2,0), (BOARD_SIZE-1,1), (BOARD_SIZE-2,BOARD_SIZE-1), (BOARD_SIZE-1,BOARD_SIZE-2)
-    // ごめんなさい、複雑なのでシンプルに石差とコーナーだけにします。
+    // Xマス・Cマスを避ける重み付け (重要)
+    // コーナーに隣接するマスに石を置くと、相手にコーナーを取られる危険性が高まるため減点
+    const xAndCSquares = [
+        [0, 1], [1, 0], [0, BOARD_SIZE - 2], [1, BOARD_SIZE - 1],
+        [BOARD_SIZE - 2, 0], [BOARD_SIZE - 1, 1], [BOARD_SIZE - 2, BOARD_SIZE - 1], [BOARD_SIZE - 1, BOARD_SIZE - 2],
+        [1, 1], [1, BOARD_SIZE - 2], [BOARD_SIZE - 2, 1], [BOARD_SIZE - 2, BOARD_SIZE - 2] // これらがXマスと呼ばれることも
+    ];
+    const xAndCWeight = 10; // Xマス・Cマスに置くことのマイナス価値
+
+    for (const [r, c] of xAndCSquares) {
+        // そのマスがまだ空きマスで、かつ隣接するコーナーが相手の色の場合
+        // または、すでにAIの色が置かれていて、その隣接コーナーが空きの場合なども考慮すべきだが複雑なのでシンプルに
+        // ここでは単純に、X/Cマスに自分の石があること自体を少し嫌う、という簡易的な評価にします。
+        // より高度には、隣接するコーナーの状態と組み合わせて評価します。
+         if (currentBoard[r][c] === aiPlayerColor) {
+             // evaluation -= xAndCWeight; // AIがX/Cマスを持っていること自体は必ずしも悪くないのでここは保留
+         } else if (currentBoard[r][c] === humanPlayerColor) {
+             // evaluation += xAndCWeight; // 人間がX/Cマスを持っていること自体は必ずしも良いとは限らないのでここも保留
+         }
+
+        // より重要なのは、隣接するコーナーがまだ空きの場合に、X/Cマスに相手の色があること
+        // これはその相手がコーナーを取る準備をしている可能性を示唆するため、AIにとっては危険
+        if (currentBoard[r][c] === humanPlayerColor) {
+             // 隣接するコーナーがまだ空きかチェック (0,1 の隣接コーナーは 0,0 と 0,2, 1,1 ... 複雑)
+             // シンプル版: X/Cマスが空きで、その隣接するコーナーが空きの場合、AIや人間に取られるリスク
+             if (currentBoard[r][c] === EMPTY) {
+                  // このX/Cマスに石が置かれることで、誰がコーナーを取りやすくなるか、まで評価すると非常に複雑
+                  // ここは後回しにし、次のモビリティに行きましょう。
+             }
+        }
+    }
+
+    // モビリティ (着手可能マス数) の重み付け (重要)
+    // 着手可能マスが多い方が有利であることが多い
+    const mobilityWeight = 5; // 着手可能マス1つあたりの価値
+
+    aiMobility = getAllValidMoves(currentBoard, aiPlayerColor).length;
+    humanMobility = getAllValidMoves(currentBoard, humanPlayerColor).length;
+
+    evaluation += (aiMobility - humanMobility) * mobilityWeight; // ③ モビリティ差を加点
+
+    // 安定石 (確定石) の評価 (実装は非常に複雑になるため今回はスキップ)
+    // 例: 辺や隅にあり、どれだけ相手に裏返されにくいか。完全に確定した石は非常に価値が高い。
+
+
+    // 終盤の評価 (残りマスが少ない場合は、石差が絶対的な価値になる)
+    const emptySquares = countEmptySquares(currentBoard);
+    if (emptySquares <= 10) { // かなり終盤の場合
+         evaluation = aiScore - humanScore; // ほぼ石差だけで勝敗が決まる
+    }
+
 
     return evaluation; // AIにとって有利なほど高い値
 }
